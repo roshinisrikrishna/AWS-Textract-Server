@@ -20,8 +20,8 @@ app.post('/analyze-document', cors(), upload.single('file'), async (req, res) =>
     const textractClient = new TextractClient({
       region:  "ap-south-1",
       credentials: {
-        accessKeyId: "AKIAXLI36RQODVQRLAND",
-        secretAccessKey: "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"
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
       }
     });
         const textractResponse = await textractClient.send(new AnalyzeDocumentCommand({
