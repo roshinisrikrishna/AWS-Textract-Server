@@ -46,12 +46,7 @@ const desiredKeys = {
   "Date of Birth": { "skipCount": 1, "textCompare": "existing)" },
   "PAN": { "skipCount": 2, "textCompare": "existing)" },
   "Gender": { "skipCount": 2, "textCompare": "M/F/TG" },
-  "Type of Account": [
-    { "skipCount": 1, "textCompare": "Scheme Account" },
-    { "skipCount": 2, "textCompare": "Scheme Account" },
-    { "skipCount": 3, "textCompare": "Scheme Account" },
-    { "skipCount": 4, "textCompare": "Scheme Account" }
-  ],
+  "Type of Account": { "skipCount": 1, "textCompare": "Scheme Account" }, 
   "Occupation": { "skipCount": 1, "textCompare": "Husband's" },
   "Status": { "skipCount": 2, "textCompare": "Husband's" },
   "Annual Income": { "skipCount": 3, "textCompare": "Husband's" },
