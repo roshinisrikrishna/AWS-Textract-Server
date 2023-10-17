@@ -28,15 +28,17 @@ app.post("/login",(req,res)=>{
     email:"roshinisrikrishna@gmail.com"
   }
   jwt.sign({user},process.env.ACCESS_TOKEN_SECRET,(err,token)=>{
-    res.json({
-      token
-    })
+    process.env.ACCESS_TOKEN_SECRET=token
   })
 })
 
 app.get("/profile", (req, res) => {
-  let token = req.query.token;
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, authData) => {
+  let tokenParam = req.query.token;
+  console.log("tokenParam ",tokenParam)
+  console.log("process.env.ACCESS_TOKEN_SECRET ",process.env.ACCESS_TOKEN_SECRET)
+
+
+  jwt.verify(tokenParam, process.env.ACCESS_TOKEN_SECRET, (err, authData) => {
     if(err){
       console.log(err);
       res.send({result:"invalid token"});
@@ -369,8 +371,11 @@ app.get('/analyze-document', cors(), async (req, res) => {
         // Retrieve the existing data
         const existingData = result[0];
 
-        let token = req.query.token;
-        jwt.verify(token, secretKey, (err, authData) => {
+        let tokenParam = req.query.token;
+        console.log("tokenParam ",tokenParam)
+        console.log("process.env.ACCESS_TOKEN_SECRET ",process.env.ACCESS_TOKEN_SECRET)
+        console.log("secretKey ",secretKey)
+        jwt.verify(tokenParam, secretKey, (err, authData) => {
           if(err){
             console.log(err);
             res.send({result:"invalid token"});
