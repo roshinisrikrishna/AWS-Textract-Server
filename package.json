@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "build": "npm install"
+    "build": "webpack --config webpack.config.cjs"
   },
   "keywords": [],
   "author": "",
@@ -14,17 +14,36 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.421.0",
     "@aws-sdk/client-textract": "^3.421.0",
+    "@pdftron/pdfnet-node": "^10.4.0",
     "aws-sdk": "^2.1466.0",
     "axios": "^1.5.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "multer-s3": "^3.0.1",
     "mysql2": "^3.6.1",
     "nodemon": "^3.0.1",
+    "ocr-space-api": "^1.0.1",
+    "ocrad.js": "^0.0.1",
     "pdf-extract": "^1.0.11",
-    "tesseract.js": "^4.1.2"
+    "pdf-image": "^2.0.0",
+    "pdf-parse": "^1.1.1",
+    "pdf-poppler": "^0.2.1",
+    "pdf2image": "^1.2.3",
+    "tesseract.js": "^4.1.4"
+  },
+  "devDependencies": {
+    "browserify-zlib": "^0.2.0",
+    "crypto-browserify": "^3.12.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }
