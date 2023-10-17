@@ -29,6 +29,7 @@ app.post("/login",(req,res)=>{
   }
   jwt.sign({user},process.env.ACCESS_TOKEN_SECRET,(err,token)=>{
     process.env.ACCESS_TOKEN_SECRET=token
+    res.json({token});
   })
 })
 
