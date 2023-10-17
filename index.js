@@ -6,6 +6,7 @@ import multer from 'multer';
 import { TextractClient, AnalyzeDocumentCommand } from "@aws-sdk/client-textract";
 import cors from 'cors';
 import mysql from 'mysql2'; // MySQL database driver
+import jwt from 'jsonwebtoken';
 
 // Create a MySQL database connection pool
 const db = mysql.createPool({
@@ -17,7 +18,37 @@ const db = mysql.createPool({
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
+const secretKey="abcd123";
 app.use(cors());
+
+app.post("/login",(req,res)=>{
+  const user={
+    id:1,
+    username:"roshini",
+    email:"roshinisrikrishna@gmail.com"
+  }
+  jwt.sign({user},process.env.ACCESS_TOKEN_SECRET,(err,token)=>{
+    res.json({
+      token
+    })
+  })
+})
+
+app.get("/profile", (req, res) => {
+  let token = req.query.token;
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, authData) => {
+    if(err){
+      console.log(err);
+      res.send({result:"invalid token"});
+    }
+    else {
+      res.json({
+        message:"profile accessed",
+        authData
+      });
+    }
+  });
+});
 
 
 app.post('/analyze-document', cors(), upload.single('file'), async (req, res) => {
@@ -285,24 +316,6 @@ app.post('/analyze-document', cors(), upload.single('file'), async (req, res) =>
         keyValuePairs[key] = matchingText;
       
       }
-      
-      // let keyValuePairs ={ 
-      //   'Full Name': 'ROSHINI R NAIR',
-      //   Branch: 'COIMBATORE',
-      //   'Branch Alpha': 'RSPURM',
-      //   'Account No': '1220101001466',
-      //   'Date of Birth': '08/03/1998',
-      //   PAN: 'CBKAR2036Z',
-      //   Gender: 'Female',
-      //   'Type of Account': 'Savings Bank A/c',
-      //   Occupation: 'BUSINESS',
-      //   Status: 'MEDIUM',
-      //   'Annual Income': '2400000',
-      //   Nationality: 'INDIAN',
-      //   "Father's/Husband'sName": 'RAMESH',
-      //   'Operating Instructions': 'Self',
-      //   'Facilities required': 'Cheque Book'
-      // }
       console.log("key avlue pairs ",keyValuePairs)    
 
         // After the Textract extraction process, add the file to the database
@@ -337,6 +350,50 @@ app.post('/analyze-document', cors(), upload.single('file'), async (req, res) =>
     res.status(500).send(err.toString());
   }
 });
+
+app.get('/analyze-document', cors(), async (req, res) => {
+  try {
+    const fileName = req.query.file_name;
+
+    // Query to check if the file already exists in the database
+    const sqlCheck = `SELECT * FROM ocr_table WHERE file_name = ?`;
+
+    // Execute the query
+    db.query(sqlCheck, [fileName], async (err, result) => {
+      if (err) throw err;
+
+      // If the file exists in the database
+      if (result.length > 0) {
+        console.log('File already exists in the database.');
+
+        // Retrieve the existing data
+        const existingData = result[0];
+
+        let token = req.query.token;
+        jwt.verify(token, secretKey, (err, authData) => {
+          if(err){
+            console.log(err);
+            res.send({result:"invalid token"});
+          }
+          else {
+            res.json(existingData);
+
+          }
+        });
+
+        // Send the existing data as a response
+        // res.json(existingData);
+      } else {
+        console.log('File does not exist in the database.');
+        res.status(404).json({ message: 'File does not exist in the database.' });
+      }
+    });
+  } catch (err) {
+    res.status(500).send(err.toString());
+  }
+});
+
+
 
 const port = process.env.PORT || 5006;
 
